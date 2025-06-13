@@ -11,6 +11,22 @@ FEATURE_COLS = [
     'Fourier_Mid_High', 'Fourier_High', 'HU_Histogram_1', 'HU_Histogram_2',
     'HU_Histogram_3', 'HU_Histogram_4', 'HU_Histogram_5'
 ]
+import os 
+import pydicom
+
+
+def get_info_patient(dicom_path):
+    dicoms = [f for f in os.listdir(dicom_path) if f.endswith('.dcm')]
+    acquired_dicom = dicoms[0]
+    file = os.path.join(dicom_path, acquired_dicom)
+
+    info = pydicom.dcmread(file)
+    Patient_name = info.PatientName
+    Patient_number = info.PatientID
+
+    return Patient_name, Patient_number
+    
+
 
 def predict_with_model(xlsx_path, model_path, scaler_path, log_callback=None):
     try:
