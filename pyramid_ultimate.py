@@ -1,6 +1,6 @@
 import multiprocessing
 import tkinter as tk
-from tkinter import filedialog, messagebox, scrolledtext
+from tkinter import filedialog, messagebox, scrolledtext, ttk
 import os
 import sys
 import pandas as pd
@@ -39,8 +39,10 @@ class PyramidApp:
         tk.Button(self.root, text="찾기", command=self.choose_output_dir).grid(row=1, column=2)
 
         tk.Label(self.root, text="장기 이름").grid(row=2, column=0, sticky="w")
-        self.organ_entry = tk.Entry(self.root, width=60)
-        self.organ_entry.grid(row=2, column=1, columnspan=2)
+        organ_list = ['pancreas', 'lung', 'kidney', 'liver', 'spleen']
+        self.organ_combobox = ttk.Combobox(self.root, values = organ_list, width=60)
+        self.organ_combobox.grid(row = 2, column = 1, columnspan =2)
+        self.organ_combobox.set('장기 선택')
 
         self.start_button = tk.Button(self.root, text="시작", command=self.start_pipeline)
         self.start_button.grid(row=3, column=0, columnspan=3, pady=10)
@@ -76,7 +78,7 @@ class PyramidApp:
     def start_pipeline(self):
         dicom_path = self.dicom_dir_entry.get()
         out_path = self.output_dir_entry.get()
-        organ = self.organ_entry.get().strip().lower()
+        organ = self.organ_combobox.get().strip().lower()
 
         if not all([dicom_path, out_path, organ]):
             messagebox.showwarning("하나라도 빼먹으면 서운해...")
