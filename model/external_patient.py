@@ -56,7 +56,7 @@ def predict_with_model(xlsx_path, model_path, scaler_path, dicom_path, log_callb
             result = "비정상" if probs1 > 50 else "정상"
             log_callback("환자 번호 | 환자 이름 | 비정상도(%) | 판단 기준")
             log_callback("----------------------------------------------")
-            log_callback(f"{patient_number}   {patient_name}   {probs1:.2f}   50% <")
+            log_callback(f"{patient_number}   {patient_name}   {probs1:.2f}%   50% <")
 
         df.to_excel(xlsx_path, index=False)
 
