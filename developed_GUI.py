@@ -70,14 +70,7 @@ class PyramidApp:
         if path:
             self.output_dir_entry.delete(0, tk.END)
             self.output_dir_entry.insert(0, os.path.normpath(path))
-
-    def find_mask_file(self, output_dir, organ_name):
-        files = os.listdir(output_dir)
-        for f in files:
-            if f.lower().endswith('.nii.gz') and organ_name.lower() in f.lower():
-                return os.path.join(output_dir, f)
-        return None
-
+            
     def start_pipeline(self):
         dicom_path = self.dicom_dir_entry.get()
         out_path = self.output_dir_entry.get()
