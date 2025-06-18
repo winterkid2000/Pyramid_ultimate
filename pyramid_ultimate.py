@@ -89,7 +89,6 @@ class PyramidApp:
 
         nii_path = self.find_mask_file(out_path, organ)
         if not nii_path:
-            self.log(f"{organ}에 해당하는 마스크 파일을 찾을 수 없다고...")
             return
 
         stl_path = os.path.join(out_path, f"{organ}.stl")
