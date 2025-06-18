@@ -4,6 +4,7 @@ from tkinter import filedialog, messagebox, scrolledtext, ttk
 import os
 import sys
 import pandas as pd
+import datetime
 
 sys.path.append(os.path.abspath("."))
 
@@ -49,8 +50,10 @@ class PyramidApp:
 
         self.log_output = scrolledtext.ScrolledText(self.root, height=15, width=80, state='disabled')
         self.log_output.grid(row=4, column=0, columnspan=3, padx=5, pady=5)
+        self.log('프로그램을 시작했어요')
 
     def log(self, message):
+        self.now() = str(datetime.datetime.now())[0:-7]
         self.log_output.config(state='normal')
         self.log_output.insert(tk.END, message + "\n")
         self.log_output.config(state='disabled')
