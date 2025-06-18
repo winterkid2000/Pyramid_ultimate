@@ -111,8 +111,8 @@ class PyramidApp:
         if not run_combined_descriptor(nifti_output, nii_path, stl_path, output_xlsx):
             return
 
-        model_path = resource_path('best_model_fold.pt')
-        scaler_path = resource_path('scaler_fold.pkl')
+        model_path = resource_path('best_model_fold_{organ}.pt')
+        scaler_path = resource_path('scaler_fold_{organ}.pkl')
         try:
             predict_with_model(output_xlsx, model_path, scaler_path, log_callback=self.log)
         except Exception as e:
