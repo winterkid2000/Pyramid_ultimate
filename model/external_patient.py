@@ -2,7 +2,8 @@ import pandas as pd
 import torch
 import pickle
 from model.FFT_model import FTTransformer
-
+import pydicom
+import os 
 FEATURE_COLS = [
     'Integral_Total_HU', 'Kurtosis', 'Max_HU', 'Mean_HU', 'Median_HU', 'Min_HU',
     'Skewness', 'Sphere_Diameter', 'HU_STD', 'Total_HU', 'Volume', "Surface Area", 
@@ -11,9 +12,6 @@ FEATURE_COLS = [
     'Fourier_Mid_High', 'Fourier_High', 'HU_Histogram_1', 'HU_Histogram_2',
     'HU_Histogram_3', 'HU_Histogram_4', 'HU_Histogram_5'
 ]
-import os 
-import pydicom
-
 
 def get_info_patient(dicom_path):
     dicoms = [f for f in os.listdir(dicom_path) if f.endswith('.dcm')]
@@ -25,10 +23,8 @@ def get_info_patient(dicom_path):
     Patient_number = info.PatientID
 
     return Patient_name, Patient_number
-    
 
-
-def predict_with_model(xlsx_path, model_path, scaler_path, log_callback=None):
+def predict_with_model(xlsx_path, model_path, scaler_path, dicom_path, log_callback=None):
     try:
 
         df = pd.read_excel(xlsx_path)
@@ -46,7 +42,7 @@ def predict_with_model(xlsx_path, model_path, scaler_path, log_callback=None):
 
         with torch.no_grad():
             probs = model(X_tensor).numpy().squeeze()
-            
+        patient_name, patient_number = get_info_patient(dicom_path)    
 
         if probs.ndim == 0:
             df["Prediction"] = ["비정상" if probs > 0.5 else "정상"]
@@ -58,7 +54,9 @@ def predict_with_model(xlsx_path, model_path, scaler_path, log_callback=None):
             probs1 = float(probs[0])*100
         if log_callback:
             result = "비정상" if probs1 > 50 else "정상"
-            log_callback(f"판단: {result}, 환자는 비정상일 가능성이 {probs1:.2f}%로 {result}입니다.")
+            log_callback("환자 번호 | 환자 이름 | 비정상도(%) | 판단 기준")
+            log_callback("----------------------------------------------")
+            log_callback(f"{patient_number}   {patient_name}   probs1   50% <")
 
         df.to_excel(xlsx_path, index=False)
 
